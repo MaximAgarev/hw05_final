@@ -110,6 +110,7 @@ def post_edit(request, username, post_id):
         request, "posts/new.html", {
             "form": form,
             "post_id": post_id,
+            "post": post,
             "editing": True
         }
     )
