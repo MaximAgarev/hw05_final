@@ -1,0 +1,43 @@
+{% extends "posts/base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-3 mb-3 mt-1">
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="h3">
+                Об авторе
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="h6 text-muted">
+                {% load static %}
+                <img src="{% static 'about/me.png' %}" width="160">
+                <p>
+                <h5>Максим Агарев</h5>
+                Когорта 17
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="card-body">
+        <div class="card-text">
+          <h3><a href="https://github.com/MaximAgarev">GitHub</a></h3>
+          {% load static %}
+          <p>
+            Тут по инструкции должна быть кружка
+            <br>
+            <img src="{% static 'about/mug.png' %}">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

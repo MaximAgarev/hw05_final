@@ -1,0 +1,59 @@
+{% extends "posts/base.html" %}
+
+{% block title %}Профиль пользователя {{ user_profile.first_name }} {{ user_profile.last_name }} {% endblock %}
+
+{% block header %}Профиль пользователя {{ user_profile.first_name }} {{ user_profile.last_name }} {% endblock %}
+
+{% block content %}
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-3 mb-3 mt-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="h2">
+            {{ user_profile.first_name }} {{ user_profile.last_name }}
+          </div>
+          <div class="h3 text-muted">
+            @{{ user_profile.username }}
+          </div>
+        </div>
+        <li class="list-group-item">
+          {% if following %}
+            <a
+              class="btn btn-lg btn-light"
+              href="{% url 'profile_unfollow' user_profile.username %}" role="button">
+              Отписаться
+            </a>
+          {% else %}
+            <a
+              class="btn btn-lg btn-primary"
+              href="{% url 'profile_follow' user_profile.username %}" role="button">
+              Подписаться
+            </a>
+          {% endif %}
+        </li>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="h6 text-muted">
+              Подписчиков: XXX <br>
+              Подписан: XXX
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="h6 text-muted">
+              Записей: {{ user_profile.posts.count }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      {% for post in page %}
+        {% include "post_item.html" with post=post %}
+      {% endfor %}
+      {% include "posts/paginator.html" %}
+    </div>
+  </div>
+</main>
+{% endblock %}

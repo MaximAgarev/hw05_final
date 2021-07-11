@@ -1,0 +1,16 @@
+{% extends "posts/base.html" %}
+
+{% block title %}Последние обновления избранных авторов{% endblock %}
+{% block header %}Последние обновления избранных авторов{% endblock %}
+{% block content %}
+  <div class="container">
+
+    {% include "menu.html" with index=True %}
+    {% for post in page %}
+     {% include "post_item.html" with post=post %}
+    {% endfor %}
+
+  {% include "posts/paginator.html" %}
+
+  </div>
+{% endblock %}

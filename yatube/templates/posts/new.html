@@ -1,0 +1,40 @@
+{% extends "posts/base.html" %}
+
+{% block title %}
+    {% if editing %}
+        Редактировать запись
+    {% else %}
+        Добавить запись
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    {% if editing %}
+        Редактировать запись
+    {% else %}
+        Добавить запись
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <form method="post" enctype="multipart/form-data" action=
+    {% if editing %}
+      "{% url 'post_edit' user.username post_id %}"
+    {% else %}
+      "{% url 'new_post' %}"
+    {% endif %}>
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">
+      {% if editing %}
+        Сохранить
+      {% else %}
+        Добавить
+      {% endif %}
+    </button>
+  </form>
+{% endblock %}
