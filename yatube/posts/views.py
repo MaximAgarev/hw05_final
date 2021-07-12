@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import CommentForm, PostForm
-from .models import Comment, Follow, Group, Post, User
+from .models import Follow, Group, Post, User
 
 
 @cache_page(20, key_prefix='index_page')
@@ -58,7 +58,7 @@ def post_view(request, username, post_id):
     post = get_object_or_404(Post, id=post_id, author=user_profile.id)
 
     form = CommentForm()
-    comments = Comment.objects.filter(post_id=post_id)
+    comments = post.comments.all()
 
     return render(
         request,
@@ -144,15 +144,11 @@ def follow_index(request):
 def profile_follow(request, username):
     user_profile = get_object_or_404(User, username=username)
     if not user_profile == request.user:
-        if not Follow.objects.filter(
-                user=request.user,
-                author=user_profile
-        ).exists():
-            Follow.objects.create(
-                user=request.user,
-                author=user_profile
-            )
-            return profile(request, username)
+        Follow.objects.get_or_create(
+            user=request.user,
+            author=user_profile
+        )
+        return profile(request, username)
     return profile(request, username)
 
 
@@ -164,12 +160,3 @@ def profile_unfollow(request, username):
         author=user_profile
     ).delete()
     return profile(request, username)
-
-
-def page_not_found(request, exception=None):
-    return render(request, "misc/404.html",
-                  {"path": request.path}, status=404)
-
-
-def server_error(request):
-    return render(request, "misc/500.html", status=500)

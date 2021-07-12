@@ -198,9 +198,13 @@ class PostPagesTests(TestCase):
         response_before_del = self.guest_client.get(reverse("index"))
         cached_post.delete()
         response_after_del = self.guest_client.get(reverse("index"))
+        cache.clear()
+        response_after_clear = self.guest_client.get(reverse("index"))
 
         self.assertEqual(response_before_del.content,
                          response_after_del.content)
+        self.assertNotEqual(response_after_del.content,
+                            response_after_clear.content)
         self.assertEqual(response_after_del.context, None)
 
     def test_authorized_user_can_follow(self):
@@ -226,18 +230,27 @@ class PostPagesTests(TestCase):
 
     def test_new_post_appears_in_follower_feed(self):
         """Новая запись пользователя появляется в ленте тех,
-        кто на него подписан и не появляется у тех, кто не подписан."""
+        кто на него подписан"""
         follower = User.objects.create_user(username="FollowerTester")
-        non_follower = User.objects.create_user(username="NonFollowerTester")
         following = self.post.author
         Follow.objects.create(user=follower, author=following)
-
         self.authorized_client.force_login(follower)
+
         response = self.authorized_client.get(reverse("follow_index"))
+
         self.assertEqual(response.context["page"][0].text, self.post.text)
 
+    def test_new_post_not_in_non_follower_feed(self):
+        """Новая запись пользователя не появляется в ленте тех,
+        кто не подписан."""
+        non_follower = User.objects.create_user(username="NonFollowerTester")
+        follower = User.objects.create_user(username="FollowerTester")
+        following = self.post.author
+        Follow.objects.create(user=follower, author=following)
         self.authorized_client.force_login(non_follower)
+
         response = self.authorized_client.get(reverse("follow_index"))
+
         with self.assertRaises(IndexError):
             response.context["page"][0]
 

@@ -88,3 +88,9 @@ class Follow(models.Model):
                 name="unique_following"
             )
         ]
+    # Я все-таки решил оставить этот вариант.
+    # По ссылке unique_together на djangoproject написано:
+    # Use UniqueConstraint with the constraints option instead.
+    # UniqueConstraint provides more functionality than unique_together.
+    # unique_together may be deprecated in the future.
+    # Не буду приучиваться к устаревающему варианту :)
